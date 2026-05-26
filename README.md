@@ -1,4 +1,4 @@
-# NeuroGuard – Mental Health Prediction System
+# NeuroGuard – Mental Health Prediction System using NON-INVAISE METHOD
 
 NeuroGuard is an AI-powered Mental Health Prediction System designed to analyze user responses and predict mental health conditions using Machine Learning techniques. The project combines an interactive frontend, Flask backend, and ML models to provide a smooth and intelligent mental health assessment experience.
 

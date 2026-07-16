@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuroguard - Mental Well-Being</title>
+    <meta name="description" content="Neuroguard - Your AI-powered mental well-being companion. Track moods, build healthy habits, and grow through personalized insights.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Splash Screen -->
+        <section id="splash-screen" class="screen active flex-center column splash-screen">
+            <div class="logo-animation">
+                <div class="pulse-ring"></div>
+                <div class="pulse-core"></div>
+                <i data-feather="activity" class="splash-icon"></i>
+            </div>
+            <h1 class="app-title mt-6 splash-fade">Neuroguard</h1>
+            <p class="tagline splash-fade ml-2 mr-2">Mental wellness, elevated by intelligence.</p>
+        </section>
+
+        <!-- Auth Screen -->
+        <section id="auth-screen" class="screen auth-screen">
+            <header class="screen-header text-center pt-8">
+                <h2>Welcome</h2>
+                <p class="text-muted mt-2">Create your profile to get started</p>
+            </header>
+            <div class="screen-content scrollable" style="padding-bottom: 2rem;">
+                <form id="auth-form" onsubmit="event.preventDefault(); app.handleAuth();" class="auth-form slide-up-anim">
+                    <div class="input-group mb-4">
+                        <label class="input-label text-small font-medium text-muted">Full Name</label>
+                        <input type="text" id="reg-name" class="input mt-1" placeholder="Jane Doe" required>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label class="input-label text-small font-medium text-muted">Phone Number</label>
+                        <input type="tel" id="reg-phone" class="input mt-1" placeholder="+1 234 567 8900" required>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label class="input-label text-small font-medium text-muted">Email Address</label>
+                        <input type="email" id="reg-email" class="input mt-1" placeholder="you@example.com" required>
+                    </div>
+                    <div class="input-group mb-4" style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label class="input-label text-small font-medium text-muted">Age</label>
+                            <input type="number" id="reg-age" class="input mt-1" placeholder="25" min="13" max="120" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label class="input-label text-small font-medium text-muted">Gender</label>
+                            <select id="reg-gender" class="input mt-1" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group mb-6">
+                        <label class="input-label text-small font-medium text-muted">User Type</label>
+                        <select id="reg-type" class="input mt-1" required>
+                            <option value="" disabled selected>Select Type</option>
+                            <option value="Student">Student</option>
+                            <option value="Employee">Employee</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full btn-large" id="auth-submit-btn">Start</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Assessment Screen -->
+        <section id="assessment-screen" class="screen assessment-v2">
+            <!-- Calm background -->
+            <div class="assess-bg-blob"></div>
+
+            <header class="assess-header relative-z">
+                <div class="assess-top-bar">
+                    <button class="btn-icon assess-back-btn" id="btn-prev-step" onclick="app.prevStep()">
+                        <i data-feather="arrow-left"></i>
+                    </button>
+                    <div class="assess-step-counter">
+                        <span id="assess-step-current">1</span>
+                        <span class="text-muted"> / </span>
+                        <span id="assess-step-total">12</span>
+                    </div>
+                    <div style="width:36px;"></div>
+                </div>
+                <div class="assess-progress-wrap mt-3">
+                    <div class="assess-progress-track">
+                        <div class="assess-progress-fill" id="assessment-progress" style="width: 8.33%;"></div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="screen-content scrollable relative-z" style="padding-top: 0.5rem;">
+
+                <!-- ── Q1: Emotional State ── -->
+                <div class="assessment-step active" id="step-1">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">💫</span>
+                        <span>Emotional State</span>
+                    </div>
+                    <h3 class="assess-question">How often do you feel overwhelmed by your emotions?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q2: Stress ── -->
+                <div class="assessment-step" id="step-2">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">⚡</span>
+                        <span>Stress Levels</span>
+                    </div>
+                    <h3 class="assess-question">How often do you feel under extreme stress or pressure?</h3>
+                    <div class="slider-container mt-6 mb-4">
+                        <div class="flex-between mb-3 text-small text-muted font-medium">
+                            <span>Never</span>
+                            <span>Sometimes</span>
+                            <span>Always</span>
+                        </div>
+                        <input type="range" class="slider" min="0" max="4" value="2" oninput="app.stepScores[2] = parseInt(this.value)">
+                    </div>
+                </div>
+
+                <!-- ── Q3: Overthinking ── -->
+                <div class="assessment-step" id="step-3">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🌀</span>
+                        <span>Overthinking</span>
+                    </div>
+                    <h3 class="assess-question">Do you find yourself caught in loops of repetitive or worrying thoughts?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q4: Negative Thoughts ── -->
+                <div class="assessment-step" id="step-4">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">💭</span>
+                        <span>Thought Patterns</span>
+                    </div>
+                    <h3 class="assess-question">Do you struggle to control or dismiss negative thoughts?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q5: Mental Exhaustion ── -->
+                <div class="assessment-step" id="step-5">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🔋</span>
+                        <span>Energy & Exhaustion</span>
+                    </div>
+                    <h3 class="assess-question">How often do you feel mentally or emotionally drained?</h3>
+                    <div class="slider-container mt-6 mb-4">
+                        <div class="flex-between mb-3 text-small text-muted font-medium">
+                            <span>Never</span>
+                            <span>Sometimes</span>
+                            <span>Always</span>
+                        </div>
+                        <input type="range" class="slider" min="0" max="4" value="2" oninput="app.stepScores[5] = parseInt(this.value)">
+                    </div>
+                </div>
+
+                <!-- ── Q6: Sleep ── -->
+                <div class="assessment-step" id="step-6">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🌙</span>
+                        <span>Sleep Behavior</span>
+                    </div>
+                    <h3 class="assess-question">Do you have difficulty falling or staying asleep?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q7: Isolation ── -->
+                <div class="assessment-step" id="step-7">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">👥</span>
+                        <span>Social Interaction</span>
+                    </div>
+                    <h3 class="assess-question">Do you feel isolated or disconnected from people around you?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q8: Focus ── -->
+                <div class="assessment-step" id="step-8">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🎯</span>
+                        <span>Focus & Concentration</span>
+                    </div>
+                    <h3 class="assess-question">How well are you able to concentrate on tasks that matter to you?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Always</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Never</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q9: Daily Habits ── -->
+                <div class="assessment-step" id="step-9">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🌿</span>
+                        <span>Daily Habits</span>
+                    </div>
+                    <h3 class="assess-question">Do you find it hard to maintain healthy daily routines (eating, exercise, self-care)?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q10: Anxiety ── -->
+                <div class="assessment-step" id="step-10">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🫀</span>
+                        <span>Anxiety</span>
+                    </div>
+                    <h3 class="assess-question">How often do you feel anxious, on edge, or unable to relax?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q11: Motivation ── -->
+                <div class="assessment-step" id="step-11">
+                    <div class="assess-category-tag">
+                        <span class="assess-cat-emoji">🚀</span>
+                        <span>Motivation</span>
+                    </div>
+                    <h3 class="assess-question">How often do you feel hopeless or lose interest in things you used to enjoy?</h3>
+                    <div class="freq-options">
+                        <div class="freq-card" data-value="0" onclick="app.selectFreq(this)"><span class="freq-emoji">😌</span><span class="freq-label">Never</span></div>
+                        <div class="freq-card" data-value="1" onclick="app.selectFreq(this)"><span class="freq-emoji">🙂</span><span class="freq-label">Rarely</span></div>
+                        <div class="freq-card" data-value="2" onclick="app.selectFreq(this)"><span class="freq-emoji">😐</span><span class="freq-label">Sometimes</span></div>
+                        <div class="freq-card" data-value="3" onclick="app.selectFreq(this)"><span class="freq-emoji">😟</span><span class="freq-label">Often</span></div>
+                        <div class="freq-card" data-value="4" onclick="app.selectFreq(this)"><span class="freq-emoji">😔</span><span class="freq-label">Always</span></div>
+                    </div>
+                </div>
+
+                <!-- ── Q12: Your Needs (multi-select) ── -->
+                <div class="assessment-step" id="step-12">
+                    <div class="assess-category-tag needs-tag">
+                        <span class="assess-cat-emoji">✨</span>
+                        <span>Your Needs</span>
+                    </div>
+                    <h3 class="assess-question">What do you want help with right now?</h3>
+                    <p class="text-small text-muted mb-4" style="margin-top:-0.5rem;">You can choose more than one.</p>
+                    <div class="needs-grid" id="needs-grid">
+                        <div class="need-chip" data-need="reduce-stress" onclick="app.toggleNeed(this)"><span class="need-icon">🌊</span><span>Reduce stress</span></div>
+                        <div class="need-chip" data-need="improve-sleep" onclick="app.toggleNeed(this)"><span class="need-icon">🌙</span><span>Improve sleep</span></div>
+                        <div class="need-chip" data-need="increase-focus" onclick="app.toggleNeed(this)"><span class="need-icon">🎯</span><span>Increase focus</span></div>
+                        <div class="need-chip" data-need="feel-better" onclick="app.toggleNeed(this)"><span class="need-icon">💛</span><span>Feel better emotionally</span></div>
+                        <div class="need-chip" data-need="reduce-anxiety" onclick="app.toggleNeed(this)"><span class="need-icon">🫂</span><span>Reduce anxiety</span></div>
+                        <div class="need-chip" data-need="boost-motivation" onclick="app.toggleNeed(this)"><span class="need-icon">🚀</span><span>Boost motivation</span></div>
+                        <div class="need-chip" data-need="manage-overthinking" onclick="app.toggleNeed(this)"><span class="need-icon">🌀</span><span>Manage overthinking</span></div>
+                        <div class="need-chip" data-need="daily-routine" onclick="app.toggleNeed(this)"><span class="need-icon">🌿</span><span>Improve daily routine</span></div>
+                    </div>
+                    <div class="needs-custom-wrap mt-4">
+                        <label class="needs-custom-label">Something else on your mind?</label>
+                        <div class="needs-input-row">
+                            <input type="text" id="needs-custom-input" class="needs-custom-input" placeholder="Type your own need here..." maxlength="120">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bottom-actions relative-z">
+                <button class="btn btn-ghost-assess" id="btn-skip-step" onclick="app.nextStep()">Skip</button>
+                <button class="btn btn-primary-assess ml-auto" id="btn-next-step" onclick="app.nextStep()">
+                    <span id="next-btn-label">Continue</span>
+                    <i data-feather="arrow-right" style="width:18px; height:18px; margin-left:6px;"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="results-screen" class="screen results-v2 with-nav">
+            <div class="results-bg-blob"></div>
+
+            <div class="screen-content scrollable pb-pb relative-z" style="padding-top: 2rem;">
+
+                <!-- Mental Health Level Badge -->
+                <div class="res-level-wrap text-center mb-5" id="res-level-wrap">
+                    <div class="res-level-ring" id="res-level-ring">
+                        <div class="res-level-inner">
+                            <span class="res-level-emoji" id="res-level-emoji">🌿</span>
+                        </div>
+                    </div>
+                    <h2 class="res-level-title mt-3" id="res-level-title">Your Mind Blueprint</h2>
+                    <div class="res-level-badge mt-2" id="res-level-badge">Moderate</div>
+                    <p class="text-small text-muted mt-2 mb-0" id="res-level-desc">Insights based on your responses</p>
+                </div>
+
+                <!-- Score Cards Grid -->
+                <div class="res-scores-grid mb-5" id="res-scores-grid">
+                    <!-- Injected by JS -->
+                </div>
+
+                <!-- Personalized Insight -->
+                <div class="res-insight-card mb-4" id="res-insight-card">
+                    <div class="res-insight-header">
+                        <span class="res-insight-icon">✨</span>
+                        <span class="font-medium">Personalized Insight</span>
+                    </div>
+                    <p class="text-small mt-2" id="res-insight-text">Based on your responses, we've crafted a personalized wellness plan to support your journey.</p>
+                </div>
+
+                <!-- Your Needs summary -->
+                <div class="res-needs-card mb-5" id="res-needs-card" style="display:none;">
+                    <p class="text-xsmall text-muted uppercase tracking-wide font-medium mb-3">Your Focus Areas</p>
+                    <div class="res-needs-pills" id="res-needs-pills"></div>
+                </div>
+
+                <!-- Critical Level CTA -->
+                <div class="res-critical-card" id="res-critical-card" style="display:none;">
+                    <div class="critical-icon">🤝</div>
+                    <h4 class="mt-2 mb-1">You're not alone</h4>
+                    <p class="text-small" style="line-height:1.6;">Your responses suggest you may benefit from speaking with a mental health professional. Reaching out is a sign of strength — not weakness.</p>
+                    <div class="critical-actions mt-4">
+                        <button class="btn-cta-therapy" id="btn-book-therapy" onclick="app.bookTherapy()">
+                            <i data-feather="calendar" style="width:16px; height:16px;"></i>
+                            Book a Therapy Session
+                        </button>
+                        <button class="btn-cta-hospital" id="btn-find-help" onclick="app.findHelp()">
+                            <i data-feather="map-pin" style="width:16px; height:16px;"></i>
+                            Find Nearby Support
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary-assess w-full mt-4 mb-8" onclick="app.navigateTo('dashboard-screen')">
+                    View My Dashboard
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!--              ENHANCED DASHBOARD SCREEN              -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <section id="dashboard-screen" class="screen with-nav dashboard-enhanced">
+            <div class="animated-bg"></div>
+            <header class="screen-header header-friendly relative-z">
+                <p class="greeting-pre">Good morning ❤️</p>
+                <h2 id="dynamic-greeting">You're glowing today!</h2>
+            </header>
+
+            <div class="screen-content scrollable pb-pb relative-z">
+
+                <!-- ── LEVEL SYSTEM CARD ── -->
+                <div class="level-system-card mb-6">
+                    <div class="level-card-inner">
+                        <div class="level-badge-wrap">
+                            <div class="level-ring-outer">
+                                <svg class="level-ring-svg" viewBox="0 0 80 80">
+                                    <circle class="ring-track" cx="40" cy="40" r="34"/>
+                                    <circle class="ring-fill improving" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="64"/>
+                                </svg>
+                                <div class="level-ring-inner">
+                                    <span class="level-number">7</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-info">
+                            <div class="level-badge improving-badge">⚡ Improving</div>
+                            <h3 class="level-name">Level 7 – Rising Mind</h3>
+                            <p class="text-small text-muted mt-1">3 more check‑ins to reach <strong>Consistent</strong></p>
+                            <div class="level-xp-bar mt-3">
+                                <div class="level-xp-fill" style="width: 70%;"></div>
+                            </div>
+                            <div class="flex-between mt-1">
+                                <span class="text-xsmall text-muted">XP: 700 / 1000</span>
+                                <span class="text-xsmall text-muted">Next: Lv 8</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level Milestones Track -->
+                    <div class="milestone-track mt-4">
+                        <div class="milestone-step done">
+                            <div class="ms-dot done"><i data-feather="check"></i></div>
+                            <span>Beginner</span>
+                        </div>
+                        <div class="milestone-line done"></div>
+                        <div class="milestone-step active">
+                            <div class="ms-dot active"><i data-feather="zap"></i></div>
+                            <span>Improving</span>
+                        </div>
+                        <div class="milestone-line"></div>
+                        <div class="milestone-step">
+                            <div class="ms-dot"><i data-feather="award"></i></div>
+                            <span>Consistent</span>
+                        </div>
+                        <div class="milestone-line"></div>
+                        <div class="milestone-step">
+                            <div class="ms-dot"><i data-feather="star"></i></div>
+                            <span>Master</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── ACTIVITY METRICS ROW ── -->
+                <div class="activity-row mb-6">
+                    <div class="activity-chip streak-chip">
+                        <span class="flame-icon">🔥</span>
+                        <div>
+                            <div class="activity-chip-value" id="dash-streak-val">-</div>
+                            <div class="activity-chip-label">Day Streak</div>
+                        </div>
+                        <div class="chip-mini-bar">
+                            <div class="chip-fill streak-fill" id="dash-streak-fill" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="activity-chip checkin-chip">
+                        <span class="chip-icon">✅</span>
+                        <div>
+                            <div class="activity-chip-value" id="dash-checkin-val">-</div>
+                            <div class="activity-chip-label">Check-ins</div>
+                        </div>
+                        <div class="chip-mini-bar">
+                            <div class="chip-fill checkin-fill" id="dash-checkin-fill" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="activity-chip consist-chip">
+                        <span class="chip-icon">📈</span>
+                        <div>
+                            <div class="activity-chip-value" id="dash-consist-val">-%</div>
+                            <div class="activity-chip-label">Consistency</div>
+                        </div>
+                        <div class="chip-mini-bar">
+                            <div class="chip-fill consist-fill" id="dash-consist-fill" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── WEEKLY STREAK DOTS ── -->
+                <div class="streak-card card glass-card mb-6">
+                    <div class="flex-between align-center mb-3">
+                        <span class="font-medium flex align-center gap-2"><span class="flame-icon">🔥</span> <span id="dash-weekly-streak-banner">- Day Streak!</span></span>
+                        <span class="text-small badge-pill badge-green" id="dash-weekly-streak-badge">-</span>
+                    </div>
+                    <div class="streak-days" id="dash-weekly-streak-days">
+                        <div class="streak-day done">M</div>
+                        <div class="streak-day done">T</div>
+                        <div class="streak-day today">W</div>
+                        <div class="streak-day">T</div>
+                        <div class="streak-day">F</div>
+                        <div class="streak-day">S</div>
+                        <div class="streak-day">S</div>
+                    </div>
+                </div>
+
+                <!-- ── RECENT ASSESSMENT RESULT ── -->
+                <div class="card gradient-card mb-6 slide-up-anim" id="dash-recent-assessment">
+                    <div class="mood-wave-bg"></div>
+                    <div class="relative-z">
+                        <p class="text-small uppercase tracking-wide mb-2 opacity-80 font-medium">Recent Assessment</p>
+                        
+                        <div id="dash-assessment-loading" style="display: flex; align-items: center; gap: 8px; padding: 1rem 0;">
+                            <i data-feather="loader" class="spin" style="width: 18px; height: 18px;"></i> Fetching latest result...
+                        </div>
+                        
+                        <div id="dash-assessment-content" style="display: none;">
+                            <div class="flex align-center gap-3 mb-2">
+                                <div class="mood-emoji-large" id="dash-res-emoji"></div>
+                                <h3 id="dash-res-title"></h3>
+                            </div>
+                            <p class="text-small font-medium opacity-80 mb-1" id="dash-res-score" style="margin-top: 4px;"></p>
+                            <p class="text-body opacity-90 mt-2" id="dash-res-desc"></p>
+                        </div>
+                        
+                        <div id="dash-assessment-empty" style="display: none; padding: 1rem 0;">
+                            <p class="text-body opacity-90">No assessments taken yet. Take an assessment to see your insights.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── TODAY'S SNAPSHOT ── -->
+                <div id="dash-snapshot-container" style="display: none;">
+                    <p class="font-medium mb-4 px-2 mt-4">Assessment Snapshot</p>
+                    <div class="pv2-snapshot mb-6 slide-up-anim">
+                        <div class="pv2-snap-item">
+                            <div class="pv2-snap-emoji snap-mood" id="snap-mood-emoji"></div>
+                            <div class="pv2-snap-text">
+                                <span class="pv2-snap-val" id="snap-mood-val"></span>
+                                <span class="pv2-snap-key">Mood</span>
+                            </div>
+                        </div>
+                        <div class="pv2-snap-divider"></div>
+                        <div class="pv2-snap-item">
+                            <div class="pv2-snap-emoji snap-energy" id="snap-energy-emoji"></div>
+                            <div class="pv2-snap-text">
+                                <span class="pv2-snap-val" id="snap-energy-val"></span>
+                                <span class="pv2-snap-key">Energy</span>
+                            </div>
+                        </div>
+                        <div class="pv2-snap-divider"></div>
+                        <div class="pv2-snap-item">
+                            <div class="pv2-snap-emoji snap-sleep" id="snap-sleep-emoji"></div>
+                            <div class="pv2-snap-text">
+                                <span class="pv2-snap-val" id="snap-sleep-val"></span>
+                                <span class="pv2-snap-key">Sleep</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── PERSONAL GOALS ── -->
+                <h3 class="font-medium mb-4 mt-4 px-2">Personal Goals</h3>
+                <div class="goals-list mb-6">
+
+                    <!-- Sleep Goal -->
+                    <div class="goal-card mb-3" id="goal-sleep">
+                        <div class="goal-header">
+                            <div class="goal-icon-wrap sleep-icon">🌙</div>
+                            <div class="goal-text">
+                                <span class="font-medium text-small">Better Sleep</span>
+                                <span class="goal-milestone sleep-milestone">Almost there!</span>
+                            </div>
+                            <div class="goal-pct">85%</div>
+                        </div>
+                        <div class="goal-progress-track mt-2">
+                            <div class="goal-progress-fill sleep-fill animated-fill" style="--fill-width: 85%;"></div>
+                            <div class="goal-milestones-overlay">
+                                <div class="gm-dot" style="left: 50%" title="Halfway!"></div>
+                                <div class="gm-dot achieved" style="left: 75%" title="Great Progress!"></div>
+                            </div>
+                        </div>
+                        <div class="goal-sub flex-between mt-2">
+                            <span class="text-xsmall text-muted">7 / 8 hrs avg</span>
+                            <span class="text-xsmall badge-pill badge-blue">🏆 Almost at Goal!</span>
+                        </div>
+                    </div>
+
+                    <!-- Meditation Goal -->
+                    <div class="goal-card mb-3" id="goal-meditation">
+                        <div class="goal-header">
+                            <div class="goal-icon-wrap meditation-icon">🧘</div>
+                            <div class="goal-text">
+                                <span class="font-medium text-small">Meditation</span>
+                                <span class="goal-milestone meditation-milestone">Doing great!</span>
+                            </div>
+                            <div class="goal-pct">80%</div>
+                        </div>
+                        <div class="goal-progress-track mt-2">
+                            <div class="goal-progress-fill meditation-fill animated-fill" style="--fill-width: 80%;"></div>
+                            <div class="goal-milestones-overlay">
+                                <div class="gm-dot achieved" style="left: 50%"></div>
+                                <div class="gm-dot" style="left: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="goal-sub flex-between mt-2">
+                            <span class="text-xsmall text-muted">4 / 5 days this week</span>
+                            <span class="text-xsmall badge-pill badge-green">⭐ 4-Day Streak</span>
+                        </div>
+                    </div>
+
+                    <!-- Stress Goal -->
+                    <div class="goal-card" id="goal-stress">
+                        <div class="goal-header">
+                            <div class="goal-icon-wrap stress-icon">🌿</div>
+                            <div class="goal-text">
+                                <span class="font-medium text-small">Stress Reduction</span>
+                                <span class="goal-milestone stress-milestone">Keep going!</span>
+                            </div>
+                            <div class="goal-pct">60%</div>
+                        </div>
+                        <div class="goal-progress-track mt-2">
+                            <div class="goal-progress-fill stress-fill animated-fill" style="--fill-width: 60%;"></div>
+                            <div class="goal-milestones-overlay">
+                                <div class="gm-dot achieved" style="left: 50%"></div>
+                                <div class="gm-dot" style="left: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="goal-sub flex-between mt-2">
+                            <span class="text-xsmall text-muted">Avg stress: Moderate</span>
+                            <span class="text-xsmall badge-pill badge-lavender">🌱 Building habit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── GENTLE OBSERVATIONS ── -->
+                <h3 class="font-medium mb-4 px-2">Gentle Observations</h3>
+                <div class="discovery-scroll flex gap-4 mb-6">
+                    <div class="insight-card glass-card">
+                        <div class="insight-icon bg-light-blue"><i data-feather="moon"></i></div>
+                        <p class="text-small">You've averaged <strong>8 hours</strong> of sleep recently. Notice how much clearer your mind feels?</p>
+                    </div>
+                    <div class="insight-card glass-card">
+                        <div class="insight-icon bg-light-green"><i data-feather="target"></i></div>
+                        <p class="text-small">Your focus peaks in the mornings. A great time for deep, meaningful work!</p>
+                    </div>
+                    <div class="insight-card glass-card">
+                        <div class="insight-icon bg-light-lavender"><i data-feather="trending-up"></i></div>
+                        <p class="text-small">Consistency up <strong>15%</strong> this week. Your dedication is showing real results!</p>
+                    </div>
+                </div>
+
+                <!-- ── RECENT JOURNEY ── -->
+                <h3 class="font-medium mb-4 px-2 mt-4">Your Recent Journey</h3>
+                <div class="journey-card mb-6">
+                    <div class="journey-path">
+                        <div class="journey-node"><span class="node-emoji">😌</span><span class="node-day">Mon</span></div>
+                        <div class="journey-line up"></div>
+                        <div class="journey-node"><span class="node-emoji">😊</span><span class="node-day">Tue</span></div>
+                        <div class="journey-line down"></div>
+                        <div class="journey-node active"><span class="node-emoji">😌</span><span class="node-day">Today</span></div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <button class="btn btn-primary-assess w-full" onclick="app.navigateTo('support-screen')">
+                        Explore Exercises <i data-feather="arrow-right" style="width:18px; margin-left:6px; vertical-align: middle;"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Support Screen -->
+        <section id="support-screen" class="screen with-nav">
+            <div class="animated-bg" style="opacity: 0.5;"></div>
+            <header class="screen-header relative-z">
+                <h2>Support & Care</h2>
+                <p class="text-muted mt-2 text-small">Personalized exercises for your well-being</p>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z">
+                <h3 class="font-medium mb-4">Recommended for you</h3>
+                
+                <div class="action-card mb-4" onclick="app.startExercise('breathing', 'Breathing Exercise', 5)">
+                    <div class="action-icon bg-light-blue">
+                        <div class="anim-breathe-mini"></div>
+                    </div>
+                    <div class="action-content">
+                        <h4>Breathing Exercise</h4>
+                        <p class="text-small text-muted">Reduce anxiety • 5 mins</p>
+                    </div>
+                    <i data-feather="chevron-right" class="text-muted"></i>
+                </div>
+
+                <div class="action-card mb-4" onclick="app.startExercise('meditation', 'Mindful Meditation', 10)">
+                    <div class="action-icon bg-light-lavender">
+                        <div class="anim-pulse-mini"></div>
+                    </div>
+                    <div class="action-content">
+                        <h4>Mindful Meditation</h4>
+                        <p class="text-small text-muted">Find your center • 10 mins</p>
+                    </div>
+                    <i data-feather="chevron-right" class="text-muted"></i>
+                </div>
+
+                <div class="action-card mb-4" onclick="app.startExercise('grounding', 'Grounding Techniques', 5)">
+                    <div class="action-icon bg-light-green">
+                        <div class="anim-ground-mini"></div>
+                    </div>
+                    <div class="action-content">
+                        <h4>Grounding Techniques</h4>
+                        <p class="text-small text-muted">Regain focus • 5 mins</p>
+                    </div>
+                    <i data-feather="chevron-right" class="text-muted"></i>
+                </div>
+                
+                <div class="action-card mb-4" onclick="app.startExercise('stress', 'Stress Relief', 8)">
+                    <div class="action-icon" style="background:#FFEFEB;">
+                        <div class="anim-waves-mini"></div>
+                    </div>
+                    <div class="action-content">
+                        <h4>Stress Relief</h4>
+                        <p class="text-small text-muted">Decompress body & mind • 8 mins</p>
+                    </div>
+                    <i data-feather="chevron-right" class="text-muted"></i>
+                </div>
+                
+                <div class="action-card mb-4" onclick="app.startExercise('sleep', 'Sleep Relaxation', 10)">
+                    <div class="action-icon" style="background:#EBF8F5;">
+                        <div class="anim-sleep-mini"></div>
+                    </div>
+                    <div class="action-content">
+                        <h4>Sleep Relaxation</h4>
+                        <p class="text-small text-muted">Drift off smoothly • 10 mins</p>
+                    </div>
+                    <i data-feather="chevron-right" class="text-muted"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guided Session Screen -->
+        <section id="guided-session-screen" class="screen">
+            <button class="btn-icon session-close-btn" onclick="app.endExercise()"><i data-feather="x"></i></button>
+            <div class="session-container flex-column flex-center h-full relative-z">
+                <h2 id="session-title" class="mb-6 font-medium">Exercise</h2>
+                
+                <div class="session-visual flex-center mb-8">
+                    <div id="session-animation" class="anim-large"></div>
+                </div>
+
+                <div id="session-instruction" class="session-instruction mb-8 text-center text-body">
+                    Get ready...
+                </div>
+                
+                <div class="session-timer flex-center">
+                    <span id="session-time" class="timer-text font-medium">05:00</span>
+                </div>
+            </div>
+            <div class="animated-bg session-bg"></div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!--              PREMIUM PROFILE SCREEN                 -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <section id="profile-screen" class="screen with-nav profile-v2">
+            <div class="pv2-top-blob"></div>
+
+            <!-- Sticky Header -->
+            <header class="pv2-header relative-z">
+                <h2 class="pv2-title">Profile</h2>
+                <button class="pv2-edit-btn" onclick="app.navigateTo('privacy-screen')">
+                    <i data-feather="settings"></i>
+                </button>
+            </header>
+
+            <div class="screen-content scrollable pb-pb relative-z" style="padding-top: 0.5rem;">
+
+                <!-- ══ TABS ══ -->
+                <div class="profile-tabs-container mb-5">
+                    <button class="profile-tab active" onclick="app.switchProfileTab('user-info')">User Info</button>
+                    <button class="profile-tab" onclick="app.switchProfileTab('help')">Help & Support</button>
+                    <button class="profile-tab" onclick="app.switchProfileTab('dark-mode')">Appearance</button>
+                </div>
+
+                <div class="profile-tab-content active" id="ptab-user-info">
+                    <div class="pv2-hero mb-5">
+                        <div class="pv2-avatar-ring">
+                            <div class="pv2-avatar"><span id="profile-avatar-initials">JD</span></div>
+                        </div>
+                        <h3 class="pv2-name mt-2" id="profile-name-display">Jane Doe</h3>
+                        <p class="pv2-bio mt-1">Seeking balance and mindfulness everyday ✨</p>
+                        
+                        <div class="pv2-settings mt-5 mb-5 text-left">
+                            <div class="pv2-setting-row" style="padding: 1.25rem 1rem;">
+                                <div class="pv2-setting-icon pv2-blue-icon"><i data-feather="user"></i></div>
+                                <div class="ml-2">
+                                    <div class="text-small text-muted font-medium uppercase tracking-wide" style="font-size: 0.65rem;">Full Name</div>
+                                    <div class="font-medium mt-1" id="profile-fullname-display">Jane Doe</div>
+                                </div>
+                            </div>
+                            <div class="pv2-settings-sep"></div>
+                            <div class="pv2-setting-row" style="padding: 1.25rem 1rem;">
+                                <div class="pv2-setting-icon pv2-green-icon"><i data-feather="mail"></i></div>
+                                <div class="ml-2">
+                                    <div class="text-small text-muted font-medium uppercase tracking-wide" style="font-size: 0.65rem;">Email Address</div>
+                                    <div class="font-medium mt-1" id="profile-email-display">jane@example.com</div>
+                                </div>
+                            </div>
+                            <div class="pv2-settings-sep"></div>
+                            <div class="pv2-setting-row" style="padding: 1.25rem 1rem;">
+                                <div class="pv2-setting-icon pv2-lavender-icon"><i data-feather="calendar"></i></div>
+                                <div class="ml-2">
+                                    <div class="text-small text-muted font-medium uppercase tracking-wide" style="font-size: 0.65rem;">Member Since</div>
+                                    <div class="font-medium mt-1">April 2026</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="profile-tab-content" id="ptab-help">
+                    <p class="pv2-section-label">Support Center</p>
+                    <div class="help-menu-grid mb-5">
+                        <div class="help-menu-card" onclick="app.navigateTo('help-guides-screen')">
+                            <div class="hmc-icon bg-light-blue"><i data-feather="book-open"></i></div>
+                            <div class="hmc-text">
+                                <div class="hmc-title">Help Guides</div>
+                                <div class="hmc-desc">Learn how to use the app to its fullest</div>
+                            </div>
+                            <i data-feather="chevron-right" class="hmc-chevron"></i>
+                        </div>
+                        <div class="help-menu-card" onclick="app.navigateTo('faq-screen')">
+                            <div class="hmc-icon bg-light-green"><i data-feather="help-circle"></i></div>
+                            <div class="hmc-text">
+                                <div class="hmc-title">FAQ</div>
+                                <div class="hmc-desc">Answers to common questions and issues</div>
+                            </div>
+                            <i data-feather="chevron-right" class="hmc-chevron"></i>
+                        </div>
+                    </div>
+
+                    <p class="pv2-section-label pt-2">Reach Out</p>
+                    <div class="help-menu-grid mb-5">
+                        <div class="help-menu-card" onclick="app.navigateTo('contact-screen')">
+                            <div class="hmc-icon bg-light-lavender"><i data-feather="mail"></i></div>
+                            <div class="hmc-text">
+                                <div class="hmc-title">Contact Support</div>
+                                <div class="hmc-desc">Email our support team directly</div>
+                            </div>
+                            <i data-feather="chevron-right" class="hmc-chevron"></i>
+                        </div>
+                        <div class="help-menu-card" onclick="app.navigateTo('feedback-screen')">
+                            <div class="hmc-icon" style="background:#FFF0F5; color:#D53F8C;"><i data-feather="message-square"></i></div>
+                            <div class="hmc-text">
+                                <div class="hmc-title">Send Feedback</div>
+                                <div class="hmc-desc">Help us improve your experience</div>
+                            </div>
+                            <i data-feather="chevron-right" class="hmc-chevron"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-tab-content" id="ptab-dark-mode">
+                    <div class="text-center mb-6 mt-4">
+                        <div class="theme-illustration mb-4 flex-center mx-auto" style="width: 80px; height: 80px; background: var(--bg-light-blue); border-radius: 50%; transition: background 0.3s ease;">
+                            <i data-feather="aperture" class="text-primary theme-icon" style="width: 36px; height: 36px;"></i>
+                        </div>
+                        <h3 class="mb-2">Appearance</h3>
+                        <p class="text-small text-muted">Customize the look and feel of the app.</p>
+                    </div>
+
+                    <div class="theme-selector-grid">
+                        <div class="theme-option active" data-theme="default" onclick="app.setTheme('default', this)">
+                            <div class="theme-circle" style="background: linear-gradient(135deg, #FDFEFF, #EBF4FF);"></div>
+                            <span>Calm Blue</span>
+                        </div>
+                        <div class="theme-option" data-theme="dark" onclick="app.setTheme('dark', this)">
+                            <div class="theme-circle" style="background: linear-gradient(135deg, #2D3748, #1A202C);"></div>
+                            <span>Dark Mode</span>
+                        </div>
+                        <div class="theme-option" data-theme="nature" onclick="app.setTheme('nature', this)">
+                            <div class="theme-circle" style="background: linear-gradient(135deg, #F0FFF4, #C6F6D5);"></div>
+                            <span>Nature</span>
+                        </div>
+                        <div class="theme-option" data-theme="sunset" onclick="app.setTheme('sunset', this)">
+                            <div class="theme-circle" style="background: linear-gradient(135deg, #FFFAF0, #FEEBC8);"></div>
+                            <span>Sunset</span>
+                        </div>
+                        <div class="theme-option" data-theme="focus" onclick="app.setTheme('focus', this)">
+                            <div class="theme-circle" style="background: linear-gradient(135deg, #E2E8F0, #A0AEC0);"></div>
+                            <span>Focus</span>
+                        </div>
+                        <div class="theme-option" data-theme="mood" onclick="app.setTheme('mood', this)">
+                            <div class="theme-circle mood-theme-circle" style="background: conic-gradient(#A3C4F3, #68D391, #F6AD55, #A3C4F3);"></div>
+                            <span>Mood Based</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6 mb-6">
+                    <button class="pv2-logout-btn w-full mb-3" onclick="app.logout()">Log Out</button>
+                    <p class="text-xsmall text-muted">Neuroguard v1.0.0</p>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Privacy & Settings Screen -->
+        <section id="privacy-screen" class="screen help-screen with-nav">
+            <header class="help-header relative-z" style="padding-bottom: 0.5rem;">
+                <button class="btn-icon back-btn flex-center" onclick="app.navigateTo('profile-screen')">
+                    <i data-feather="arrow-left" style="width:20px;"></i>
+                </button>
+                <h2>Privacy & Settings</h2>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z mt-2">
+                <!-- Data Sharing Preferences -->
+                <p class="pv2-section-label pt-2">Data Sharing</p>
+                <div class="pref-card-container mb-5">
+                    <div class="pref-card">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Personalized Insights</h4>
+                            <p class="pref-desc">Allow us to analyze data for tailored recommendations.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="pref-card">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Anonymous Analytics</h4>
+                            <p class="pref-desc">Help us improve by sharing anonymized usage data.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="pref-card border-none">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Save User History</h4>
+                            <p class="pref-desc">Securely store results to track long-term progress.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notification Preferences -->
+                <p class="pv2-section-label pt-2">Notifications</p>
+                <div class="pref-card-container mb-5">
+                    <div class="pref-card">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Daily Check-in Reminder</h4>
+                            <p class="pref-desc">Get a gentle nudge to track your well-being.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-daily-reminders" onchange="app.toggleReminder(this)">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="pref-card">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Exercise Reminders</h4>
+                            <p class="pref-desc">Reminders to take a break and practice self-care.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="pref-card border-none" style="padding-bottom:1.25rem;">
+                        <div class="pref-info">
+                            <h4 class="pref-title">Reminder Time</h4>
+                            <p class="pref-desc">Preferred time for notifications.</p>
+                        </div>
+                        <input type="time" id="reminder-time-picker" class="reminder-time-display" value="09:00" style="border:none; cursor:pointer;" onchange="app.setReminderTime(this.value)">
+                    </div>
+                </div>
+
+                <!-- App Permissions -->
+                <p class="pv2-section-label pt-2">App Permissions</p>
+                <div class="permissions-grid mb-5">
+                    <div class="perm-card">
+                        <div class="perm-icon bg-light-blue"><i data-feather="bell"></i></div>
+                        <div class="perm-text">
+                            <h4>Notifications</h4>
+                            <p>Deliver alerts & reminders</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                    </div>
+                    <div class="perm-card">
+                        <div class="perm-icon bg-light-green"><i data-feather="hard-drive"></i></div>
+                        <div class="perm-text">
+                            <h4>Data Storage</h4>
+                            <p>Store assessments locally</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                    </div>
+                    <div class="perm-card">
+                        <div class="perm-icon" style="background:#FFF0F5; color:#D53F8C;"><i data-feather="database"></i></div>
+                        <div class="perm-text">
+                            <h4>Usage Data</h4>
+                            <p>Track feature interactions</p>
+                        </div>
+                        <button class="btn btn-outline-sm" onclick="this.classList.toggle('active'); this.textContent = this.classList.contains('active') ? 'Allowed' : 'Allow';">Allow</button>
+                    </div>
+                    <div class="perm-card">
+                        <div class="perm-icon bg-light-lavender"><i data-feather="smile"></i></div>
+                        <div class="perm-text">
+                            <h4>Mood Tracking</h4>
+                            <p>Analyze emotional health</p>
+                        </div>
+                        <button class="btn btn-outline-sm active" onclick="this.classList.toggle('active'); this.textContent = this.classList.contains('active') ? 'Allowed' : 'Allow';">Allowed</button>
+                    </div>
+                </div>
+
+                <!-- Download My Data -->
+                <p class="pv2-section-label pt-2">Download My Data</p>
+                <div class="data-export-card mb-5">
+                    <div class="flex-center flex-column mb-3 text-center">
+                        <div class="hmc-icon bg-light-blue mb-2"><i data-feather="download-cloud"></i></div>
+                        <h4 class="font-medium text-main" style="margin-bottom:4px;">Export PDF Report</h4>
+                        <p class="text-small text-muted">Download a beautifully formatted summary of your assessment history and insights.</p>
+                    </div>
+                    <button class="btn btn-primary-assess w-full" onclick="app.downloadPdfReport()"><i data-feather="file-text" class="mr-2" style="width:16px;"></i> Download PDF</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Help Guides Screen -->
+        <section id="help-guides-screen" class="screen help-screen with-nav">
+            <header class="help-header relative-z">
+                <button class="btn-icon back-btn flex-center" onclick="app.navigateTo('profile-screen')">
+                    <i data-feather="arrow-left" style="width:20px;"></i>
+                </button>
+                <h2>Help Guides</h2>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z mt-2">
+                <div class="help-content-card">
+                    <h3><i data-feather="heart"></i> Welcome to Neuroguard</h3>
+                    <p>Neuroguard is designed to be your serene companion for mental well-being, providing insights into your emotional state and offering guided therapeutic exercises.</p>
+                    
+                    <h4>Taking Assessments</h4>
+                    <p>Tap the <strong>Check-in</strong> center button on the bottom menu to start. Answer honestly to build an accurate mental health blueprint.</p>
+
+                    <h4>Understanding Your Results</h4>
+                    <p>After an assessment, you will see a detailed breakdown. Scores update your profile level and streak. A critical tag indicates you may need to speak to a professional.</p>
+
+                    <h4>Tracking Progress</h4>
+                    <p>Visit the <strong>Home</strong> dashboard to track your Daily Streak, Energy levels, and Consistency.</p>
+
+                    <h4>Exercises & Support</h4>
+                    <p>The <strong>Support</strong> tab offers guided breathing, grounding, and meditation designed to provide immediate relief in moments of distress.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Screen -->
+        <section id="faq-screen" class="screen help-screen with-nav">
+            <header class="help-header relative-z">
+                <button class="btn-icon back-btn flex-center" onclick="app.navigateTo('profile-screen')">
+                    <i data-feather="arrow-left" style="width:20px;"></i>
+                </button>
+                <h2>FAQ</h2>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z mt-2">
+                <div class="faq-card">
+                    <div class="faq-item">
+                        <h4><i data-feather="info" class="faq-indicator"></i> What does the app do?</h4>
+                        <p class="text-small text-muted">Neuroguard provides a safe space to track your daily mood, understand your mental health through structured assessments, and engage in therapeutic exercises.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4><i data-feather="check-circle" class="faq-indicator"></i> How accurate are predictions?</h4>
+                        <p class="text-small text-muted">Insights are based on established mental health frameworks, but they are not a medical diagnosis. Always consult a healthcare professional for clinical advice.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4><i data-feather="shield" class="faq-indicator"></i> Is my data safe?</h4>
+                        <p class="text-small text-muted">Yes. Your assessment responses are stored securely and privately on your device. We never sell your personal information.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4><i data-feather="calendar" class="faq-indicator"></i> How often should I check in?</h4>
+                        <p class="text-small text-muted">For best results and to build a strong streak, we recommend taking an assessment once daily. However, you can check in whenever you need emotional clarity.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4><i data-feather="alert-triangle" class="faq-indicator"></i> What if my risk level is high?</h4>
+                        <p class="text-small text-muted">If your results show critical distress, we urge you to use the resources in the results screen to contact a mental health professional immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Screen -->
+        <section id="feedback-screen" class="screen help-screen with-nav">
+            <header class="help-header relative-z">
+                <button class="btn-icon back-btn flex-center" onclick="app.navigateTo('profile-screen')">
+                    <i data-feather="arrow-left" style="width:20px;"></i>
+                </button>
+                <h2>Send Feedback</h2>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z mt-2">
+                <div class="feedback-card">
+                    <div class="flex-center mb-3 text-primary" style="background:var(--bg-light-blue); width:64px; height:64px; border-radius:50%; margin: 0 auto;">
+                        <i data-feather="message-square" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    <h3 class="mb-2">We value your thoughts</h3>
+                    <p class="text-muted text-small mb-4">Let us know how we can improve your Neuroguard experience.</p>
+                    
+                    <textarea id="feedback-input" class="feedback-textarea mb-4" placeholder="Type your feedback here..." rows="6"></textarea>
+                    
+                    <button class="btn btn-primary-assess w-full" onclick="app.submitFeedback()" id="btn-submit-feedback">Submit Feedback</button>
+                    
+                    <!-- Success message hidden by default -->
+                    <div id="feedback-success" class="feedback-success mt-4 hidden" style="display:none;">
+                        <i data-feather="check-circle" class="mr-2" style="width:18px;"></i> Thank you for your feedback!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Support Screen -->
+        <section id="contact-screen" class="screen help-screen with-nav">
+            <header class="help-header relative-z">
+                <button class="btn-icon back-btn flex-center" onclick="app.navigateTo('profile-screen')">
+                    <i data-feather="arrow-left" style="width:20px;"></i>
+                </button>
+                <h2>Contact Support</h2>
+            </header>
+            <div class="screen-content scrollable pb-pb relative-z mt-2">
+                <div class="feedback-card">
+                    <div class="flex-center mb-3 text-primary" style="background:var(--bg-light-lavender); width:64px; height:64px; border-radius:50%; margin: 0 auto; color:#6B46C1;">
+                        <i data-feather="mail" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    <h3 class="mb-2">Send us a Message</h3>
+                    <p class="text-muted text-small mb-4">Your message will be sent securely via your email client.</p>
+
+                    <input type="text" id="contact-subject" class="feedback-textarea mb-3" placeholder="Subject" style="padding: 0.8rem 1rem;">
+                    <textarea id="contact-body" class="feedback-textarea mb-4" placeholder="How can we help you?" rows="6"></textarea>
+                    
+                    <button class="btn btn-primary-assess w-full" onclick="app.sendContactEmail()" style="background:linear-gradient(135deg, #D6CAEB, #B794F4); color:#44337A; box-shadow: 0 4px 16px rgba(183,148,244,0.35); border:none;"><i data-feather="send" class="mr-2" style="width:16px;"></i> Send Email</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item selective nav-dashboard active" onclick="app.navigateTo('dashboard-screen', this)">
+                <i data-feather="grid"></i><span>Home</span>
+            </div>
+            <div class="nav-item selective nav-assessment" onclick="app.navigateTo('assessment-screen', this)">
+                <div class="check-in-btn"><i data-feather="plus"></i></div>
+                <span>Check-in</span>
+            </div>
+            <div class="nav-item selective nav-support" onclick="app.navigateTo('support-screen', this)">
+                <i data-feather="heart"></i><span>Support</span>
+            </div>
+            <div class="nav-item selective nav-profile" onclick="app.navigateTo('profile-screen', this)">
+                <i data-feather="user"></i><span>Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>feather.replace();</script>
+    <script type="module" src="firebase-config.js"></script>
+    <script defer src="app.js"></script>
+</body>
+</html>

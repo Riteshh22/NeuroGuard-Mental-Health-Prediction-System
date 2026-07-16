@@ -409,13 +409,6 @@ git push origin feature-name
 **Bhanavath Ritesh Naik**
 
 🎓 B.Tech – Data Science
-
 📧 Email: bhanavathriteshnaik@gmail.com
-
 GitHub: https://github.com/Riteshh22
 
----
-
-## License
-
-This project is developed for educational and research purposes.

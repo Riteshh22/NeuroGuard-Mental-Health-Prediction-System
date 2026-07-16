@@ -1,4 +1,4 @@
-# 🧠 NeuroGuard – AI-Powered Mental Health Prediction System
+﻿# 🧠 NeuroGuard – AI-Powered Mental Health Prediction System
 
 > An AI-powered web application that predicts an individual's mental health status using machine learning and provides instant insights through an intuitive user interface.
 
@@ -26,19 +26,11 @@ The system aims to assist individuals by providing quick, data-driven insights b
 
 ---
 
+# 🏗️ System Architecture
 
-#🏗️ System Architecture
-Here is the updated System Architecture diagram reflecting the addition of the dashboard and exercise provisions.
+This diagram reflects the application flow and the addition of dashboard and exercise recommendation features.
 
-You can copy and paste this markdown block directly into your `README.md` file:
-
-```markdown
-🏗️ System Architecture
-
-
-```
-
-```
+```text
                 User
                   │
                   ▼
@@ -59,11 +51,6 @@ You can copy and paste this markdown block directly into your `README.md` file:
                   │
                   ▼
   Personalized Exercises & Recommendations
-
-```
-
-```
-
 ```
 
 ---
@@ -102,9 +89,6 @@ You can copy and paste this markdown block directly into your `README.md` file:
 
 ---
 
-# 📂 Project Structure
-
-```
 ## 📂 Project Structure
 
 ```text
@@ -132,99 +116,144 @@ NEUROGUARD-MENTAL-HEALTH-PREDICTION-SYSTEM/
 ├── styles_full.css
 ├── styles_utf8.css
 └── styles.css
-``
-
----
-## 📝 Assessment Parameters
-
-NeuroGuard evaluates an individual's mental well-being using a set of carefully selected psychological and behavioral parameters. Each parameter represents an important aspect of mental health and helps the machine learning model understand the user's emotional and cognitive state. The responses collected through these parameters are transformed into numerical features and analyzed to predict the user's mental health condition.
-
-| Parameter | Description |
-|------------|-------------|
-| **Emotional State** | Evaluates the user's emotional well-being and ability to regulate emotions in daily life. |
-| **Stress Levels** | Measures the level of stress experienced due to academic, professional, or personal responsibilities. |
-| **Overthinking** | Identifies repetitive or excessive worrying that may affect mental health. |
-| **Thought Patterns** | Analyzes the presence of persistent negative or repetitive thoughts. |
-| **Energy & Exhaustion** | Assesses mental and physical fatigue that may indicate emotional burnout. |
-| **Sleep Behavior** | Evaluates sleep quality, including difficulty falling asleep or maintaining healthy sleep patterns. |
-| **Social Interaction** | Measures the level of social engagement and feelings of isolation or loneliness. |
-| **Focus & Concentration** | Determines the user's ability to stay focused on important daily activities. |
-| **Daily Habits** | Examines consistency in maintaining healthy routines such as eating, exercising, and self-care. |
-| **Anxiety** | Assesses the frequency and intensity of anxious feelings or nervousness. |
-| **Motivation** | Evaluates enthusiasm, interest, and willingness to perform daily tasks and achieve goals. |
+```
 
 ---
 
-## 📋 Questionnaire
+# 📝 Assessment Parameters
 
-The assessment consists of a series of simple, non-invasive questions designed to evaluate different aspects of an individual's mental well-being. Users respond using a rating scale (e.g., **Never**, **Rarely**, **Sometimes**, **Often**, **Always**), allowing the system to quantify behavioral and emotional patterns.
+NeuroGuard evaluates an individual's mental well-being through carefully selected psychological and behavioral indicators. These parameters help the machine learning model understand the user's emotional, cognitive, and lifestyle patterns before generating a prediction.
 
-The questionnaire includes the following questions:
+### Parameters
 
-1. **How often do you feel overwhelmed by your emotions?**
-2. **How often do you feel under extreme stress or pressure?**
-3. **Do you find yourself caught in loops of repetitive or worrying thoughts?**
-4. **Do you struggle to control or dismiss negative thoughts?**
-5. **How often do you feel mentally or emotionally drained?**
-6. **Do you have difficulty falling or staying asleep?**
-7. **Do you feel isolated or disconnected from people around you?**
-8. **How well are you able to concentrate on tasks that matter to you?**
-9. **Do you find it difficult to maintain healthy daily routines such as eating, exercising, or self-care?**
-10. **How often do you experience feelings of anxiety or nervousness?**
-11. **How motivated do you feel to complete your daily tasks and pursue your personal goals?**
+🧠 **Emotional State**
+- Evaluates emotional stability and mood regulation.
+
+😣 **Stress Levels**
+- Measures stress caused by academic, professional, or personal responsibilities.
+
+💭 **Overthinking**
+- Detects repetitive worrying and excessive thinking patterns.
+
+🧩 **Thought Patterns**
+- Identifies persistent negative or repetitive thoughts.
+
+⚡ **Energy & Exhaustion**
+- Measures mental and physical fatigue.
+
+😴 **Sleep Behavior**
+- Evaluates sleep quality and sleeping habits.
+
+👥 **Social Interaction**
+- Assesses social engagement and feelings of isolation.
+
+🎯 **Focus & Concentration**
+- Measures the ability to stay focused on important tasks.
+
+🏃 **Daily Habits**
+- Evaluates consistency in healthy routines like eating, exercising, and self-care.
+
+😟 **Anxiety**
+- Measures anxious feelings and nervousness.
+
+🚀 **Motivation**
+- Assesses enthusiasm and willingness to complete daily activities.
 
 ---
 
-## ⚙️ How the Assessment Works
+# 📋 Assessment Questionnaire
 
-1. The user completes the mental health questionnaire.
-2. Each response is converted into a numerical value based on the selected rating.
-3. The collected responses are preprocessed and transformed into machine learning features.
-4. The trained XGBoost model analyzes the user's psychological and behavioral patterns.
-5. The system predicts the user's mental health status and displays the result through an interactive dashboard.
+The user answers the following questions before the prediction is generated.
 
-> **Note:** This assessment is intended for educational and awareness purposes only. It is not a substitute for professional psychological or medical diagnosis.
+- How often do you feel overwhelmed by your emotions?
+- How often do you feel under extreme stress or pressure?
+- Do you find yourself caught in repetitive or worrying thoughts?
+- Do you struggle to control or dismiss negative thoughts?
+- How often do you feel mentally or emotionally drained?
+- Do you have difficulty falling or staying asleep?
+- Do you feel isolated or disconnected from people around you?
+- How well are you concentrate on tasks that matter to you?
+- Do you find it difficult to maintain healthy daily routines?
+- How often do you experience anxiety or nervousness?
+- How motivated do you feel to complete your daily tasks?
 
-# 📊 Machine Learning Pipeline
+---
+
+# ⚙️ How It Works
 
 ```
-Dataset Collection
+User Questionnaire
         │
         ▼
-Data Cleaning
+ Response Encoding
         │
         ▼
-Feature Engineering
+ Data Preprocessing
         │
         ▼
-Encoding & Scaling
+ XGBoost Prediction Model
         │
         ▼
-Train-Test Split
+ Mental Health Prediction
         │
         ▼
-Model Training
-        │
-        ▼
-Model Evaluation
-        │
-        ▼
-Prediction
+ Interactive Dashboard
 ```
 
 ---
 
 # 🤖 Machine Learning Models
 
-The following machine learning algorithms were experimented with:
+The following algorithms were trained and evaluated:
 
 - Logistic Regression
-- Support Vector Machine (SVM)
 - Decision Tree
 - Random Forest
-- XGBoost
+- Support Vector Machine (SVM)
+- XGBoost ✅ (Best Performing Model)
+
+
+# 📂 Dataset
+
+The dataset contains psychological and lifestyle-related information, including:
+
+- Age
+- Gender
+- Academic Pressure
+- Work Pressure
+- Financial Stress
+- Sleep Duration
+- Family History
+- Lifestyle Habits
+- Anxiety Indicators
+- Depression Indicators
+
+---
+
+# 💡 Workflow
+
+```
+Questionnaire
+      │
+      ▼
+Preprocessing
+      │
+      ▼
+Feature Engineering
+      │
+      ▼
+Model Prediction
+      │
+      ▼
+Result Generation
+      │
+      ▼
+Dashboard Visualization
+```
 
 Among all models, **XGBoost** produced the best overall performance.
+
+---
 
 # 📊 Evaluation Metrics
 
@@ -267,41 +296,33 @@ The dataset is preprocessed before model training using feature engineering and 
 git clone https://github.com/Riteshh22/NeuroGuard-Mental-Health-Prediction-System.git
 ```
 
----
-
 ## Navigate to Project Folder
 
 ```bash
 cd NeuroGuard-Mental-Health-Prediction-System
 ```
 
----
-
 ## Create Virtual Environment
 
-Windows
+### Windows
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-Linux / macOS
+### Linux / macOS
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
----
-
 ## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
-
----
 
 ## Run the Application
 
@@ -311,9 +332,6 @@ python app.py
 
 Open your browser and visit:
 
-```
-http://127.0.0.1:5000
-```
 
 ---
 
@@ -388,13 +406,16 @@ git push origin feature-name
 
 ---
 
-
-
 **Bhanavath Ritesh Naik**
 
 🎓 B.Tech – Data Science
 
 📧 Email: bhanavathriteshnaik@gmail.com
 
- GitHub: https://github.com/Riteshh22
+GitHub: https://github.com/Riteshh22
 
+---
+
+## License
+
+This project is developed for educational and research purposes.
